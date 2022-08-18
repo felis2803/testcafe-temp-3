@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="first-button" onclick="loadFirstStage()">Load first stage</button>
+    <button id="second-button" onclick="loadSecondStage()" hidden>Load second stage</button>
+    <script>
+        const myApp  = new EventTarget();
+        const events = {
+            firstStageLoaded:  'first-stage-loaded',
+            secondStageLoaded: 'second-stage-loaded',
+            thirdStageLoaded:  'third-stage-loaded',
+        };
+
+        myApp.addEventListener(events.firstStageLoaded, console.log);
+        myApp.addEventListener(events.secondStageLoaded, console.log);
+        myApp.addEventListener(events.thirdStageLoaded, console.log);
+
+        function loadFirstStage () {
+            setTimeout(() => {
+                document.getElementById('second-button').hidden = false;
+
+                myApp.dispatchEvent(new Event(events.firstStageLoaded));
+            }, 2000);
+        }
+
+        function loadSecondStage () {
+            setTimeout(() => {
+                const button3 = document.createElement('button');
+
+                button3.id        = 'third-button';
+                button3.onclick   = loadThirdStage;
+                button3.innerText = 'Load third stage';
+
+                document.body.appendChild(button3);
+
+                myApp.dispatchEvent(new Event(events.secondStageLoaded));
+            }, 8000);
+        }
+
+        function loadThirdStage () {
+            setTimeout(() => {
+                const div = document.createElement('div');
+
+                div.innerText = 'The app is fully loaded';
+
+                document.body.appendChild(div);
+
+                myApp.dispatchEvent(new Event(events.thirdStageLoaded));
+            }, 6000);
+        }
+    </script>
+</body>
+</html>
